@@ -9,6 +9,7 @@ from cv_bridge import CvBridge
 
 from uav_base.UAVBase import UAVBase
 from std_msgs.msg import String
+from muav.srv import TrackingPoseCmd,TrackingPoseCmdResponse
 from geometry_msgs.msg import Quaternion, Twist, Vector3, Point
 from sensor_msgs.msg import Image
 from nav_msgs.msg import Odometry
@@ -48,6 +49,8 @@ class FixedUAV(UAVBase):
         super(FixedUAV, self).__init__(topic)
         self.detector = BlobDetector(fig, axe)
         self.bridge = CvBridge()
+        self.PoseCmd = None
+
 
     def process_image(self, image: Image):
         self.cam = Camera(fx=640, fy=480, h=self.position.z)
@@ -58,19 +61,20 @@ class FixedUAV(UAVBase):
         print(self.target_position)
         self.target_position[1] = -self.target_position[1] * self.cam.h / 268.51188197672957
         self.target_position[0] = -self.target_position[0] * self.cam.h / 268.51188197672957
-        self.target_position[2] = self.cam.h
-        print(self.target_position)
-        
-        
+        if abs(self.target_position[0]) < 100 and abs(self.target_position[1]) < 100:
+            self.PoseCmd(self.target_position[0].item(), self.target_position[1].item(), 2)
 
+        
 
 
 def main():
+    rospy.wait_for_service('tracking/pose_cmd')
     fig = plt.figure()
     axe = fig.add_subplot(111)
     uav = FixedUAV('fixed/cmd_vel', fig, axe)
-    rospy.Subscriber('fixed/ground_truth/state', Odometry, uav.update_state)
-    rospy.Subscriber('fixed/downward_cam/camera/image', Image, uav.process_image)
+    uav.PoseCmd = rospy.ServiceProxy('tracking/pose_cmd', TrackingPoseCmd)
+    rospy.Subscriber('fixed/ground_truth/state', Odometry, uav.update_state, queue_size=1)
+    rospy.Subscriber('fixed/downward_cam/camera/image', Image, uav.process_image, queue_size=1)
     rospy.init_node('fixed', anonymous=True)
     rate = rospy.Rate(1)
     fixed_position = Point(0, 0, 4)
