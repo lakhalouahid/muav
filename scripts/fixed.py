@@ -77,7 +77,7 @@ def main():
     rospy.Subscriber('fixed/downward_cam/camera/image', Image, uav.process_image, queue_size=1)
     rospy.init_node('fixed', anonymous=True)
     rate = rospy.Rate(1)
-    fixed_position = Point(0, 0, 4)
+    fixed_position = Point(0, 0, 20) #change here fixed position of drone
     uav.move(fixed_position)
     while not rospy.is_shutdown():
         rate.sleep() 
