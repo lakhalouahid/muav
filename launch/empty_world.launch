@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
-  <arg name="paused" default="false"/>
+<!--  <arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
@@ -13,7 +13,7 @@
     <arg name="gui" value="$(arg gui)"/>
     <arg name="headless" value="$(arg headless)"/>
     <arg name="debug" value="$(arg debug)"/>
-  </include>
+  </include>-->
 
    <group ns="fixed">
      <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor_with_downward_cam.launch">
@@ -26,7 +26,11 @@
    </group> 
 
    <group ns="tracking">
+<<<<<<< HEAD
      <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor_with_downward_cam.launch">
+=======
+     <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor.launch">
+>>>>>>> bedec3dfcde26fe0b7137856fea1365bc91198c0
        <arg name="name" value="tracking" />
        <arg name="tf_prefix" value="tracking" />
        <arg name="x" value="-2" />
