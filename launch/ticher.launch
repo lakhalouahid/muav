@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+
+<launch>
+
+<arg name="robot_name"/>
+<!--<arg name="init_pose"/>-->
+
+<!--node name="spawn_minibot_model" pkg="gazebo" type="spawn_model"
+ args="$(arg init_pose) -urdf -param /robot_description -model $(arg robot_name)"
+ respawn="false" output="screen" />-->
+
+<!-- Initialize robot_state_publisher, necessary to see robot in RVIZ -->
+ <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
+
+<!-- Robot URDF spawning in gazebo -->
+<!-- <arg name="x" value="0"/>
+ <arg name="y" value="4"/>
+ <arg name="z" value="0"/>
+ <param name="robot_description" command="$(find xacro)/xacro '$(find red_vs_blue)/rvb_description/urdf/tichar.xacro'" />
+
+<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
+     args="-urdf -param robot_description -model tichar -x $(arg x) -y $(arg y) -z $(arg z)"/>-->
+
+<!-- Robot URDF spawning in gazebo -->
+<group ns="blue">
+    <arg name="x"/>
+    <arg name="y"/>
+    <arg name="z"/>
+    <arg name="Y"/> <!--yaw-->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find muav)/urdf/cube.urdf.xacro'" />
+
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-urdf -param robot_description -model blue -x $(arg x) -y $(arg y) -z $(arg z) -Y $(arg Y)"/>
+</group>
+
+<group ns="red">
+    <arg name="x"/>
+    <arg name="y"/>
+    <arg name="z"/>
+    <arg name="Y"/> <!--yaw-->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find muav)/urdf/cube.urdf.xacro'" />
+
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-urdf -param robot_description -model red -x $(arg x) -y $(arg y) -z $(arg z) -Y $(arg Y)"/>
+</group>
+<!-- <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
+<!-- <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-urdf -param robot_description -model tichar -x $(arg x) -y $(arg y) -z $(arg z)"/>-->
+
+</launch>
+
+<!--<node name="spawn_robot" pkg="gazebo" type="spawn_urdf_model"
+args="-urdf -param robot_description -z 0.1 -model robot_model" respawn="false" output="screen" />
+
+<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-file $(find baxter_description)/urdf/baxter.urdf -urdf -z 1 -model baxter" />-->

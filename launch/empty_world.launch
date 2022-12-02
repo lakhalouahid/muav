@@ -16,17 +16,17 @@
   </include>
 
    <group ns="fixed">
-     <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor_with_cam.launch">
+     <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor_with_downward_cam.launch">
        <arg name="name" value="fixed" />
        <arg name="tf_prefix" value="fixed" />
-       <arg name="x" value="2" />
+       <arg name="x" value="0" />
        <arg name="y" value="0" />
        <arg name="z" value="0.3" />
      </include>
-   </group>
+   </group> 
 
    <group ns="tracking">
-     <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor_with_cam.launch">
+     <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor_with_downward_cam.launch">
        <arg name="name" value="tracking" />
        <arg name="tf_prefix" value="tracking" />
        <arg name="x" value="-2" />
@@ -34,6 +34,11 @@
        <arg name="z" value="0.3" />
      </include>
    </group>
-   <node name="$(anon fixed)" pkg="muav" type="fixed.py" />
-   <node name="$(anon tracking)" pkg="muav" type="tracking.py" />
+   <include file="$(find muav)/launch/cubes.launch" />
+   <param name="target" type="string" value="red" /> 
+   <node name="$(anon fixed)" pkg="muav" type="fixed.py" output="screen"/>
+   <node name="$(anon tracking)" pkg="muav" type="tracking.py" output="screen"/>
+   <!-- trick to kill gazebo when SIGINT is sent -->
+ <node name="kill_gazebo_at_interrupt" pkg="rosout" type="rosout"
+ launch-prefix="bash -c 'trap pkill\ gzserver\ \;\ pkill\ gzclient SIGINT ; sleep 1d'"/>
 </launch>
