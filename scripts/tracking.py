@@ -2,30 +2,21 @@
 import roslib; roslib.load_manifest('muav')
 import rospy
 
-from uav_base.UAVBase import UAVBase
-from muav.srv import TrackingPoseCmd,TrackingPoseCmdResponse
-from std_msgs.msg import String
-from geometry_msgs.msg import Quaternion, Twist, Vector3, Point, Pose
-from nav_msgs.msg import Odometry
+from geometry_msgs.msg import Quaternion, Point, Pose, PoseStamped
+from std_msgs.msg import Header
 
-
-class TrackingUAV(UAVBase):
-    def __init__(self, *args, **kwargs):
-        super(TrackingUAV, self).__init__(*args, **kwargs)
-
-    def cmd_position(self, req):
-        self.pose_cmd(Point(req.x, req.y, req.z))
-        return TrackingPoseCmdResponse(0);
 
 
 def main():
-    uav = TrackingUAV('tracking/cmd_vel', delta=1e-2)
-    rospy.Subscriber('tracking/ground_truth/state', Odometry, uav.update_state)
     rospy.init_node('tracking', anonymous=True)
-    s = rospy.Service("tracking/pose_cmd", TrackingPoseCmd,  uav.cmd_position)
-    position = Point(0, 0, 2)
-    uav.move(position)
-    rospy.spin()
+    rate = rospy.Rate(1)
+    pose_cmd = rospy.Publisher('tracking/command/pose', PoseStamped, queue_size=1)
+    initial_position = Point(0, 0, 2)
+    h = Header(); h.stamp = rospy.Time.now()
+    initial_pose = PoseStamped(header=h, pose=Pose(initial_position, Quaternion(0, 0, 0, 1)))
+    pose_cmd.publish(initial_pose)
+    while not rospy.is_shutdown():
+        rate.sleep() 
 
 
 
