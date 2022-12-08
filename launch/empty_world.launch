@@ -48,11 +48,14 @@
     <param name="controller/pose/yaw/k_d" type="double" value="1" /> 
     <param name="controller/pose/z/k_p" type="double" value="2" /> 
     <param name="controller/pose/z/k_d" type="double" value="1" /> 
-
-
    </group>
+
+<node pkg="rosservice" type="rosservice" name="start_your_engines_tracking" args="call --wait /tracking/controller_manager/load_controller controller/pose" />
+<node pkg="rosservice" type="rosservice" name="start_your_engines_fixed" args="call --wait /fixed/controller_manager/load_controller controller/pose" />
+
+
 <!--   <include file="$(find muav)/launch/cubes.launch" />-->
-   <param name="target" type="string" value="blue" /> 
+<!--   <param name="target" type="string" value="blue" />-->
    <node name="$(anon tracking)" pkg="muav" type="tracking.py" output="screen"/>
    <node name="$(anon fixed)" pkg="muav" type="fixed.py" output="screen"/>
    <!-- trick to kill gazebo when SIGINT is sent -->
