@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
-<arg name="paused" default="false"/>
+<!--<arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
@@ -13,7 +13,7 @@
     <arg name="gui" value="$(arg gui)"/>
     <arg name="headless" value="$(arg headless)"/>
     <arg name="debug" value="$(arg debug)"/>
-  </include>
+  </include>-->
 
    <group ns="fixed">
      <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor_with_downward_cam.launch">
@@ -34,11 +34,12 @@
    </group> 
 
    <group ns="tracking">
-     <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor_with_downward_cam.launch">
+<!--     <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor_with_downward_cam.launch">-->
+     <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor.launch">
        <arg name="name" value="tracking" />
        <arg name="tf_prefix" value="tracking" />
        <arg name="x" value="3" />
-       <arg name="y" value="5" />
+       <arg name="y" value="3" />
        <arg name="z" value="0.3" />
      </include>
     <param name="controller/pose/xy/k_p" type="double" value="2" /> 
@@ -50,7 +51,7 @@
 
 
    </group>
-   <include file="$(find muav)/launch/cubes.launch" />
+<!--   <include file="$(find muav)/launch/cubes.launch" />-->
    <param name="target" type="string" value="blue" /> 
    <node name="$(anon tracking)" pkg="muav" type="tracking.py" output="screen"/>
    <node name="$(anon fixed)" pkg="muav" type="fixed.py" output="screen"/>
